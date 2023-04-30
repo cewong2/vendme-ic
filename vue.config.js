@@ -1,28 +1,20 @@
+const webpack = require('webpack');
+
 module.exports = {
   configureWebpack: {
-    module: {
-      rules: [
-        {
-          test: /\.mjs$/,
-          include: /node_modules/,
-          type: "javascript/auto",
-        },
-        {
-          test: /\.worker\.js$/,
-          use: { loader: "worker-loader" },
-        },
-      ],
-    },
+    plugins: [
+      new webpack.DefinePlugin({
+        'process.env': {
+          NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+          VUE_APP_API_BASE_URL: JSON.stringify(process.env.VUE_APP_API_BASE_URL)
+        }
+      })
+    ]
   },
-  chainWebpack: (config) => {
-    config.module
-      .rule("vue")
-      .use("vue-loader")
-      .tap((options) => {
-        options.compilerOptions.whitespace = "preserve";
-        return options;
-      });
-  },
-  transpileDependencies: ["vuetify"],
-  publicPath: process.env.NODE_ENV === "production" ? "/vendme-ic/" : "/",
+  chainWebpack: config => {
+    config.plugin('html').tap(args => {
+      args[0].title = 'VendMe Image Capture';
+      return args;
+    });
+  }
 };
