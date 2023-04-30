@@ -1,11 +1,15 @@
 const webpack = require('webpack');
 const path = require('path');
 const defaultWebpackConfig = require('./webpack.config.js');
-//const CompressionPlugin = require('compression-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 
 module.exports = {
   devServer: {
-    disableHostCheck: true
+    allowedHosts: [
+      'localhost',
+      '.github.com',
+      '.githubusercontent.com'
+    ]
   },
   configureWebpack: {
     plugins: [
@@ -13,7 +17,8 @@ module.exports = {
         'process.env': {
           NODE_ENV: JSON.stringify(process.env.NODE_ENV)
         }
-      })
+      }),
+      new CompressionPlugin()
     ]
   },
   chainWebpack: config => {
@@ -27,15 +32,14 @@ module.exports = {
     }
 
     config.module
-      .rule('babel')
+      .rule('js')
       .use('babel-loader')
+      .loader('babel-loader')
       .tap(options => {
-        options.presets = ['@babel/preset-env'];
+        options.presets = [['@babel/preset-env', { modules: false }]];
         options.plugins = ['@babel/plugin-transform-runtime'];
         return options;
       });
-    
-    config.plugin('compression-webpack-plugin').use(CompressionPlugin);
 
     config.module
       .rule('vue')
