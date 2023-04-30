@@ -6,16 +6,6 @@ import { createDriveClient } from './drive-utils'
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 
-// define setDynamic() function
-const setDynamic = (Vue) => {
-  Vue.mixin({
-    // ...
-  })
-}
-
-// call setDynamic() function
-setDynamic(Vue)
-
 Vue.config.productionTip = false
 
 // Load Google API client and authorize app
@@ -31,7 +21,47 @@ gapi.load('client:auth2', () => {
     new Vue({
       router,
       vuetify,
+      mounted () {
+        const setDynamic = (Vue) => {
+          Vue.mixin({
+            beforeCreate () {
+              const options = this.$options
+              if (options.dynamicProps) {
+                const data = options.data
+                options.data = function () {
+                  return {
+                    ...(typeof data === 'function' ? data.call(this) : data),
+                    propsData: {}
+                  }
+                }
+                options.computed = options.computed || {}
+                Object.keys(options.dynamicProps).forEach(key => {
+                  options.computed[key] = function () {
+                    return this.propsData[key] !== undefined
+                      ? this.propsData[key]
+                      : options.dynamicProps[key]
+                  }
+                })
+              }
+            },
+            mounted () {
+              const propsData = {}
+              const options = this.$options
+              Object.keys(options.dynamicProps || {}).forEach(key => {
+                propsData[key] = this[key]
+                delete this[key]
+              })
+              this.propsData = propsData
+            }
+          })
+        }
+
+        setDynamic(Vue)
+
+        // Render app
+        this.$mount('#app')
+      },
       render: h => h(App, { props: { driveClient } })
-    }).$mount('#app')
+    })
   })
 })
