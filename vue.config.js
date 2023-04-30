@@ -3,22 +3,13 @@ const path = require('path');
 const defaultWebpackConfig = require('./webpack.config.js');
 const CompressionPlugin = require('compression-webpack-plugin');
 
+
 module.exports = {
   devServer: {
     allowedHosts: [
       'localhost',
       '.github.com',
       '.githubusercontent.com'
-    ]
-  },
-  configureWebpack: {
-    plugins: [
-      new webpack.DefinePlugin({
-        'process.env': {
-          NODE_ENV: JSON.stringify(process.env.NODE_ENV)
-        }
-      }),
-      new CompressionPlugin()
     ]
   },
   chainWebpack: config => {
@@ -41,6 +32,8 @@ module.exports = {
         return options;
       });
 
+    config.plugin('CompressionPlugin').use(CompressionPlugin);
+      
     config.module
       .rule('vue')
       .use('vue-loader')
