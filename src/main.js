@@ -6,6 +6,16 @@ import { createDriveClient } from './drive-utils'
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 
+// define setDynamic() function
+const setDynamic = (Vue) => {
+  Vue.mixin({
+    // ...
+  })
+}
+
+// call setDynamic() function
+setDynamic(Vue)
+
 Vue.config.productionTip = false
 
 // Load Google API client and authorize app
