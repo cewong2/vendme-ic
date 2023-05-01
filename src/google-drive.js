@@ -1,7 +1,6 @@
 import { gapi } from "gapi";
 
 const FOLDER_ID = '1YcTWaN7yK7Tb1OvLoxgMXoooAX47UYwf';
-const FOLDER_NAME = 'Japanese Vending Machine AI Model';
 
 export async function createSubFolder(name) {
   const folderMetadata = {

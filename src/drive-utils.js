@@ -1,5 +1,8 @@
+/* eslint-disable no-unused-vars */
+
 import { getAuthClient, createDriveClient, listFiles } from './google-drive';
-import { getImageData } from './image-utils';
+import { getImageData, resizeImage } from './image-utils';
+
 
 const ROOT_FOLDER_NAME = 'Vendme-ic';
 
@@ -35,17 +38,18 @@ async function createRootFolder(driveClient) {
   return folderId;
 }
 
-async function createImageFolder(driveClient, folderName) {
+async function createImageFolder(driveClient, label) {
   const rootFolderId = await createRootFolder(driveClient);
-  const folderId = await createFolder(driveClient, folderName, rootFolderId);
+  const folderId = await createFolder(driveClient, label, rootFolderId);
   return folderId;
 }
 
-async function uploadImages(driveClient, folderName, images, label) {
-  const folderId = await createImageFolder(driveClient, folderName);
+async function uploadImages(driveClient, label, images) {
+  const folderId = await createImageFolder(driveClient, label);
 
   for (let i = 0; i < images.length; i++) {
-    const imageData = await getImageData(images[i]);
+    const resizedImage = await resizeImage(images[i], 224, 224);
+    const imageData = await getImageData(resizedImage);
     const fileMetadata = {
       name: `${label}_${i}.jpg`,
       parents: [folderId]

@@ -21,8 +21,10 @@
 import { mapActions } from 'vuex';
 import { createDriveClient } from '@/drive-utils';
 import { resizeImage } from '@/image-utils';
-import { getLabels, uploadFileToFolder } from '@/google-drive';
-import { VApp, VBtn, VContainer, VMain, VSnackbar } from 'vuetify/lib';
+import { getLabels, uploadFileToFolder, createLabel } from '@/google-drive';
+import 'vuetify/dist/vuetify.css';
+import { VApp, VBtn, VContainer, VMain, VSnackbar } from 'vuetify';
+
 
 export default {
   name: 'App',
@@ -87,10 +89,14 @@ export default {
       }
       return label;
     },
+    async getLabels() {
+      const labels = await getLabels(this.driveClient);
+      return labels;
+    }
   },
   computed: {
-    async labels() {
-      return await getLabels(this.driveClient);
+    labels() {
+      return this.getLabels();
     }
   },
   async mounted() {
@@ -115,9 +121,3 @@ export default {
   },
 };
 </script>
-
-<style>
-  #app {
-    height: 100%;
-  }
-</style>

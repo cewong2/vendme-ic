@@ -1,5 +1,5 @@
 const CLIENT_ID = '633902444937-9h2et3s8rtkd014plld9fueg3lu669qk.apps.googleusercontent.com';
-const API_KEY = 'YOUR_API_KEY'; // Replace with your actual API key
+const API_KEY = 'AIzaSyCPqwgKe14x0uvlRjB3kYPXEEIrdMh0iKg';
 const SCOPES = 'https://www.googleapis.com/auth/drive';
 
 export function loadGoogleApi() {
