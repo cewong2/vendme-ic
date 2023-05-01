@@ -8,4 +8,6 @@ module: {
           presets: ['@babel/preset-react', '@babel/preset-env'],
           plugins: ['@babel/proposal-class-properties']
         },
-      },
+      }
+    ]
+}
